@@ -45,15 +45,17 @@ shinyUI(fluidPage(
                         #animate =
                         #  animationOptions(interval = 2000, loop = TRUE))
             radioButtons("view", label="View:",
-                         choices = list("Carbon Fraction"=1,
-                                        "Carbon Amount"=2),
-                         selected = 1)
+                         choices = list("Carbon Amount"=1,
+                                        "Carbon Fraction"=2),
+                         selected = 1)#,
+            #actionButton("generate_plots","Generate plots (may take time to load)")
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            imageOutput("gif"),
-            plotOutput("still")
+          plotOutput("areaStill"),
+          imageOutput("areaGif"),
+          imageOutput("barGif")
         )
     )
 ))
