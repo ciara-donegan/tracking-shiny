@@ -31,8 +31,8 @@ shinyUI(fluidPage(
             sliderInput("start", label="Select year to begin tracking:",
                         min = 1750, max = 2200, value = 1900, sep=""),
             selectInput("pool", label="Select pool to view:",
-                        choices = list("High latitude ocean"="High latitude ocean",
-                                       "Low latitude ocean"="Low latitude ocean",
+                        choices = list("High latitude ocean"="HL ocean",
+                                       "Low latitude ocean"="LL ocean",
                                        "Intermediate ocean"="Intermediate ocean",
                                        "Deep ocean"="Deep ocean",
                                        "Atmosphere"="Atmosphere",
@@ -40,14 +40,14 @@ shinyUI(fluidPage(
                                        "Detritus"="Detritus",
                                        "Soil"="Soil"),
                         selected="Atmosphere"),
-            #sliderInput("year", label="Select year:",
-            #            min = 1900, max = 2300, value = 1900, sep="")
-                        #animate =
-                        #  animationOptions(interval = 2000, loop = TRUE))
             radioButtons("view", label="View:",
                          choices = list("Carbon Amount"=1,
                                         "Carbon Fraction"=2),
-                         selected = 1)#,
+                         selected = 1),
+            #radioButtons("plot", label="View:",
+            #             choices = list("Area Gif"=1,
+            #                            "Barplot Gif"=2),
+            #             selected = 1)#,
             #actionButton("generate_plots","Generate plots (may take time to load)")
         ),
 

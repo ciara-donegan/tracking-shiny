@@ -3,6 +3,7 @@ library(hector)
 library(gganimate)
 library(ggplot2)
 library(tidyverse)
+library(gifski)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -24,9 +25,9 @@ shinyServer(function(input, output) {
       df[df=="deep"] <- "Deep ocean"
       df[df=="detritus_c"] <- "Detritus"
       df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "High latitude ocean"
+      df[df=="HL"] <- "HL ocean"
       df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "Low latitude ocean"
+      df[df=="LL"] <- "LL ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -44,27 +45,28 @@ shinyServer(function(input, output) {
       tempdir()
       outfile <- tempfile(tmpdir=tempdir(), fileext='.gif')
       
-      if (input$view == 2) {
-        p = ggplot(df, aes(fill=Source, y=source_frac, x=year, width=barwidth)) +
-              geom_bar(position="stack",stat="identity") +
-              ggtitle(paste0("Fraction of Carbon in ",selectedPool," by Source")) +
-              xlab("Year") + ylab("Carbon Pool (Fraction)") +
-              # gganimate
-              transition_time(year) +
-              shadow_mark() +
-              ease_aes('linear')
-      } else {
+      if (input$view == 1) {
         p = ggplot(df, aes(fill=Source, y=source_amt, x=year, width=barwidth)) +
-              geom_bar(position="stack",stat="identity") +
-              ggtitle(paste0("Amount of Carbon in ",selectedPool," by Source")) +
-              xlab("Year") + ylab("Carbon Pool (Pg C)") +
-              # gganimate
-              transition_time(year) +
-              shadow_mark() +
-              ease_aes('linear')
+          geom_bar(position="stack",stat="identity") +
+          ggtitle(paste0("Amount of Carbon in ",selectedPool," by Source")) +
+          xlab("Year") + ylab("Carbon Pool (Pg C)") +
+          # gganimate
+          transition_time(year) +
+          shadow_mark() +
+          ease_aes('linear')
+      } else {
+        p = ggplot(df, aes(fill=Source, y=source_frac, x=year, width=barwidth)) +
+          geom_bar(position="stack",stat="identity") +
+          ggtitle(paste0("Fraction of Carbon in ",selectedPool," by Source")) +
+          xlab("Year") + ylab("Carbon Pool (Fraction)") +
+          # gganimate
+          transition_time(year) +
+          shadow_mark() +
+          ease_aes('linear')
       }
       
-      animate(p, height = 400, width = 800)
+      #animate(p, height = 400, width = 800)
+      animate(p, height=400, width=800, renderer = gifski_renderer())
       anim_save("outfile.gif") # save gif
       
       # return list with filename
@@ -92,9 +94,9 @@ shinyServer(function(input, output) {
       df[df=="deep"] <- "Deep ocean"
       df[df=="detritus_c"] <- "Detritus"
       df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "High latitude ocean"
+      df[df=="HL"] <- "HL ocean"
       df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "Low latitude ocean"
+      df[df=="LL"] <- "LL ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -136,9 +138,9 @@ shinyServer(function(input, output) {
       df[df=="deep"] <- "Deep ocean"
       df[df=="detritus_c"] <- "Detritus"
       df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "High latitude ocean"
+      df[df=="HL"] <- "HL ocean"
       df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "Low latitude ocean"
+      df[df=="LL"] <- "LL ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -172,13 +174,13 @@ shinyServer(function(input, output) {
           ease_aes('linear')
       }
       
-      animate(p, height = 400, width = 800)
+      animate(p, height=400, width=800, renderer = gifski_renderer())
       anim_save("outfile.gif") # save gif
       
       # return list with filename
       list(src = "outfile.gif",
            contentType = 'image/gif'
-           # width = 1000
+           # width = 300
            # height = 300
            # alt = "alt text, edit later!!!"
       )}, deleteFile = TRUE)
