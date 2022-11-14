@@ -43,7 +43,7 @@ shinyUI(fluidPage(
             radioButtons("view", label="View:",
                          choices = list("Carbon Amount"=1,
                                         "Carbon Fraction"=2),
-                         selected = 1),
+                         selected = 1)
             #radioButtons("plot", label="View:",
             #             choices = list("Area Gif"=1,
             #                            "Barplot Gif"=2),
@@ -53,9 +53,12 @@ shinyUI(fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-          plotOutput("areaStill"),
-          imageOutput("areaGif"),
-          imageOutput("barGif")
+          #plotOutput("areaStill"),
+          #imageOutput("areaGif"),
+          #imageOutput("barGif"),
+          #imageOutput("pieGif"),
+          imageOutput("movingBar")
+          )
         )
     )
-))
+)

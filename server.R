@@ -184,4 +184,205 @@ shinyServer(function(input, output) {
            # height = 300
            # alt = "alt text, edit later!!!"
       )}, deleteFile = TRUE)
+    
+    output$pieGif <- renderImage({
+      # run hector, get tracking data
+      ssp_file <- input$ssp_file
+      ini_file <- system.file(ssp_file, package = "hector")
+      core <- newcore(ini_file)
+      tunits <- getunits(TRACKING_DATE())
+      setvar(core, NA, TRACKING_DATE(), input$start, tunits)
+      reset(core, core$reset_date)
+      run(core, runtodate = 2300)
+      df <- get_tracking_data(core)
+      
+      # clean up pool names
+      df[df=="atmos_co2"] <- "Atmosphere"
+      df[df=="deep"] <- "Deep ocean"
+      df[df=="detritus_c"] <- "Detritus"
+      df[df=="earth_c"] <- "Fossil fuels"
+      df[df=="HL"] <- "HL ocean"
+      df[df=="intermediate"] <- "Intermediate ocean"
+      df[df=="LL"] <- "LL ocean"
+      df[df=="soil_c"] <- "Soil"
+      df[df=="veg_c"] <- "Vegetation"
+      
+      ## get vars
+      selectedPool <- input$pool
+      df <- filter(df,pool_name==selectedPool)
+      source_frac <- df$source_fraction
+      source_amt <- source_frac*df$pool_value
+      Source <- df$source_name
+      year <- df$year
+      
+      ## Plot!
+      tempdir()
+      outfile <- tempfile(tmpdir=tempdir(), fileext='.gif')
+      
+      if (input$view == 2) {
+        p <- ggplot(df,aes(x="",y=source_frac,fill=Source)) +
+          geom_bar(stat="identity",width=1) +
+          coord_polar("y",start=0) +
+          # gganimate
+          labs(title="Year: {frame_time}") +
+          transition_time(year) +
+          ease_aes('linear')}
+      
+      animate(p, renderer = gifski_renderer())
+      anim_save("outfile.gif") # save gif
+      
+      # return list with filename
+      list(src = "outfile.gif",
+           contentType = 'image/gif'
+           # width = 300
+           # height = 300
+           # alt = "alt text, edit later!!!"
+      )}, deleteFile = TRUE)
+    
+    output$movingBar <- renderImage({
+      # run hector, get tracking data
+      ssp_file <- input$ssp_file
+      ini_file <- system.file(ssp_file, package = "hector")
+      core <- newcore(ini_file)
+      tunits <- getunits(TRACKING_DATE())
+      setvar(core, NA, TRACKING_DATE(), input$start, tunits)
+      reset(core, core$reset_date)
+      run(core, runtodate = 2300)
+      df <- get_tracking_data(core)
+      
+      # clean up pool names
+      df[df=="atmos_co2"] <- "Atmosphere"
+      df[df=="deep"] <- "Deep ocean"
+      df[df=="detritus_c"] <- "Detritus"
+      df[df=="earth_c"] <- "Fossil fuels"
+      df[df=="HL"] <- "HL ocean"
+      df[df=="intermediate"] <- "Intermediate ocean"
+      df[df=="LL"] <- "LL ocean"
+      df[df=="soil_c"] <- "Soil"
+      df[df=="veg_c"] <- "Vegetation"
+      
+      ## filter df to just selected pool
+      selectedPool <- input$pool
+      df <- filter(df,pool_name==selectedPool)
+      
+      # add rank column
+      df <- df %>%
+        group_by(year) %>%
+        mutate(rank = rank(-source_fraction),
+               frac_rel = source_fraction/source_fraction[rank==1],
+               source_amt = source_fraction*pool_value,
+               amt_lbl = paste0(format(round(source_amt,2), nsmall=2), " Pg C"),
+               frac_lbl = paste0(format(round(source_fraction,2),nsmall=2))) %>%
+        group_by(source_name) %>%
+        ungroup()
+      
+      #
+      #source_frac <- df$source_fraction
+      #source_amt <- source_frac*df$pool_value
+      #Source <- df$source_name
+      #year <- df$year
+      
+      ## Plot!
+      tempdir()
+      outfile <- tempfile(tmpdir=tempdir(), fileext='.gif')
+      
+      # # Fixed bar order
+      # if (input$view == 1) {
+      #  p <- ggplot(df,aes(fill=source_name,color=source_name,
+      #                     x=reorder(source_name,source_amt),
+      #                     y=source_amt)) +
+      #    geom_bar(stat="identity") +
+      #    geom_text(aes(y=0, label = paste(source_name, " ")),
+      #              vjust = 0.2, hjust = 1, size = 6) +
+      #    geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
+      #    ylim(0,max(source_amt)+100) +
+      #    coord_flip(clip = "off", expand = FALSE) +
+      #    theme(axis.text.y=element_blank(),
+      #          axis.ticks.y=element_blank(),
+      #          legend.position="none",
+      #          plot.margin = margin(4,4,4,6,"cm")) +
+      #    ylab("Carbon (Pg)") +
+      #    xlab("") +
+      #    # gganimate
+      #    transition_time(year) +
+      #    ease_aes('linear')
+      # } else {
+      #   p <- ggplot(df,aes(fill=source_name,color=source_name,
+      #                      x=reorder(source_name,source_fraction),
+      #                      y=source_fraction)) +
+      #     geom_bar(stat="identity") +
+      #     geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0), size = 6) +
+      #     ylim(0,1) +
+      #     coord_flip(clip = "off", expand = FALSE) +
+      #     theme(legend.position="none",
+      #           plot.margin = margin(4,4,4,6,"cm")) +
+      #     ylab("Carbon Fraction") +
+      #     xlab("Source Pool")
+      #     # gganimate
+      #     transition_time(year) +
+      #     ease_aes('linear')
+      # }
+      
+      # Moving bar order
+      if (input$view == 1) {
+        p <- ggplot(df, aes(-rank, group = source_name,
+                            fill = as.factor(source_name),
+                            color = as.factor(source_name))) +
+          geom_tile(aes(y = source_amt/2,
+                        height = source_amt,
+                        width = 0.9), alpha = 0.8, color = NA) +
+          geom_text(aes(y=0, label = paste(source_name, " ")),
+                    vjust = 0.2, hjust = 1, size = 6) +
+          geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
+          ylim(0,max(source_amt)+100) +
+          coord_flip(clip = "off", expand = FALSE) +
+          theme(axis.text.y=element_blank(),
+                axis.ticks.y=element_blank(),
+                legend.position="none",
+                plot.margin = margin(4,4,4,6,"cm")) +
+          ylab("Carbon (Pg)") +
+          xlab("") +
+          # gganimate
+          transition_time(year) +
+          ease_aes('linear')
+      } else {
+        p <- ggplot(df, aes(rank, group = source_name,
+                            fill = as.factor(source_name),
+                            color = as.factor(source_name))) +
+          geom_tile(aes(y = source_fraction/2,
+                        height = source_fraction,
+                        width = 0.9), alpha = 0.8, color = NA) +
+          geom_text(aes(y=0, label = paste(source_name, " ")),
+                    vjust = 0.2, hjust = 1, size = 6) +
+          geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0),
+                    size = 6) +
+          ylim(0,1) +
+          coord_flip(clip = "off", expand = FALSE) +
+          theme(axis.text.y=element_blank(),
+                axis.ticks.y=element_blank(),
+                legend.position="none",
+                plot.margin = margin(4,4,4,6,"cm")) +
+          ylab("Carbon Fraction") +
+          xlab("") +
+        # gganimate
+        transition_time(year) +
+          ease_aes('linear')
+      }
+      
+      # animation
+      anim = p + transition_states(year,transition_length=4, state_length=2) +
+        view_follow(fixed_x = TRUE) +
+        labs(title=paste0(selectedPool," Carbon Sources: {closest_state}"))
+      
+      # render
+      animate(anim, width = 1200, height = 600, renderer = gifski_renderer())
+      anim_save("outfile.gif") # save gif
+      
+      # return list with filename
+      list(src = "outfile.gif",
+           contentType = 'image/gif'
+           # width = 300
+           # height = 300
+           # alt = "alt text, edit later!!!"
+      )}, deleteFile = TRUE)
     })
