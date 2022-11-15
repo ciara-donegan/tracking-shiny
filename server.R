@@ -22,12 +22,12 @@ shinyServer(function(input, output) {
       
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
-      df[df=="deep"] <- "Deep ocean"
+      df[df=="deep"] <- "Deep Ocean"
       df[df=="detritus_c"] <- "Detritus"
-      df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "HL ocean"
-      df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "LL ocean"
+      df[df=="earth_c"] <- "Fossil Fuels"
+      df[df=="HL"] <- "HL Ocean"
+      df[df=="intermediate"] <- "Intermediate Ocean"
+      df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -91,12 +91,12 @@ shinyServer(function(input, output) {
       
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
-      df[df=="deep"] <- "Deep ocean"
+      df[df=="deep"] <- "Deep Ocean"
       df[df=="detritus_c"] <- "Detritus"
-      df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "HL ocean"
-      df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "LL ocean"
+      df[df=="earth_c"] <- "Fossil Fuels"
+      df[df=="HL"] <- "HL Ocean"
+      df[df=="intermediate"] <- "Intermediate Ocean"
+      df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -135,12 +135,12 @@ shinyServer(function(input, output) {
       
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
-      df[df=="deep"] <- "Deep ocean"
+      df[df=="deep"] <- "Deep Ocean"
       df[df=="detritus_c"] <- "Detritus"
-      df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "HL ocean"
-      df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "LL ocean"
+      df[df=="earth_c"] <- "Fossil Fuels"
+      df[df=="HL"] <- "HL Ocean"
+      df[df=="intermediate"] <- "Intermediate Ocean"
+      df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -198,12 +198,12 @@ shinyServer(function(input, output) {
       
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
-      df[df=="deep"] <- "Deep ocean"
+      df[df=="deep"] <- "Deep Ocean"
       df[df=="detritus_c"] <- "Detritus"
-      df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "HL ocean"
-      df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "LL ocean"
+      df[df=="earth_c"] <- "Fossil Fuels"
+      df[df=="HL"] <- "HL Ocean"
+      df[df=="intermediate"] <- "Intermediate Ocean"
+      df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -252,12 +252,12 @@ shinyServer(function(input, output) {
       
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
-      df[df=="deep"] <- "Deep ocean"
+      df[df=="deep"] <- "Deep Ocean"
       df[df=="detritus_c"] <- "Detritus"
-      df[df=="earth_c"] <- "Fossil fuels"
-      df[df=="HL"] <- "HL ocean"
-      df[df=="intermediate"] <- "Intermediate ocean"
-      df[df=="LL"] <- "LL ocean"
+      df[df=="earth_c"] <- "Fossil Fuels"
+      df[df=="HL"] <- "HL Ocean"
+      df[df=="intermediate"] <- "Intermediate Ocean"
+      df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
       
@@ -286,88 +286,96 @@ shinyServer(function(input, output) {
       tempdir()
       outfile <- tempfile(tmpdir=tempdir(), fileext='.gif')
       
-      # # Fixed bar order
-      # if (input$view == 1) {
-      #  p <- ggplot(df,aes(fill=source_name,color=source_name,
-      #                     x=reorder(source_name,source_amt),
-      #                     y=source_amt)) +
-      #    geom_bar(stat="identity") +
-      #    geom_text(aes(y=0, label = paste(source_name, " ")),
-      #              vjust = 0.2, hjust = 1, size = 6) +
-      #    geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
-      #    ylim(0,max(source_amt)+100) +
-      #    coord_flip(clip = "off", expand = FALSE) +
-      #    theme(axis.text.y=element_blank(),
-      #          axis.ticks.y=element_blank(),
-      #          legend.position="none",
-      #          plot.margin = margin(4,4,4,6,"cm")) +
-      #    ylab("Carbon (Pg)") +
-      #    xlab("") +
-      #    # gganimate
-      #    transition_time(year) +
-      #    ease_aes('linear')
-      # } else {
-      #   p <- ggplot(df,aes(fill=source_name,color=source_name,
-      #                      x=reorder(source_name,source_fraction),
-      #                      y=source_fraction)) +
-      #     geom_bar(stat="identity") +
-      #     geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0), size = 6) +
-      #     ylim(0,1) +
-      #     coord_flip(clip = "off", expand = FALSE) +
-      #     theme(legend.position="none",
-      #           plot.margin = margin(4,4,4,6,"cm")) +
-      #     ylab("Carbon Fraction") +
-      #     xlab("Source Pool")
-      #     # gganimate
-      #     transition_time(year) +
-      #     ease_aes('linear')
-      # }
-      
-      # Moving bar order
+      # Fixed bar order
       if (input$view == 1) {
-        p <- ggplot(df, aes(-rank, group = source_name,
-                            fill = as.factor(source_name),
-                            color = as.factor(source_name))) +
-          geom_tile(aes(y = source_amt/2,
-                        height = source_amt,
-                        width = 0.9), alpha = 0.8, color = NA) +
-          geom_text(aes(y=0, label = paste(source_name, " ")),
-                    vjust = 0.2, hjust = 1, size = 6) +
-          geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
-          ylim(0,max(source_amt)+100) +
+       p <- ggplot(df,aes(fill=source_name,color=source_name,
+                          x=reorder(source_name,source_amt),
+                          y=source_amt)) +
+         geom_bar(stat="identity") +
+         geom_text(aes(y=0, label = paste(source_name, " ")),
+                   vjust = 0.2, hjust = 1, size = 6) +
+         geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
+         #ylim(0,max(df$source_amt)+100) +
+         coord_flip(clip = "off", expand = FALSE) +
+         theme_void() +
+         theme(plot.title = element_text(size=20,face="bold"),
+               legend.position="none",
+               panel.grid.major.x = element_line(size=.1,color="snow2"),
+               panel.grid.minor.x = element_line(size=.1,color="snow2"),
+               plot.margin = margin(1,6,1,6,"cm")) +
+         ylab("Carbon (Pg)") +
+         xlab("") +
+         
+         # gganimate
+         transition_time(year) +
+         ease_aes('linear')
+      } else {
+        p <- ggplot(df,aes(fill=source_name,color=source_name,
+                           x=reorder(source_name,source_fraction),
+                           y=source_fraction)) +
+          geom_bar(stat="identity") +
+          geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0), size = 6) +
+          #ylim(0,1) +
           coord_flip(clip = "off", expand = FALSE) +
-          theme(axis.text.y=element_blank(),
-                axis.ticks.y=element_blank(),
+          theme_void() +
+          theme(plot.title = element_text(size=20,face="bold"),
                 legend.position="none",
-                plot.margin = margin(4,4,4,6,"cm")) +
-          ylab("Carbon (Pg)") +
+                panel.grid.major.x = element_line(size=.1,color="snow2"),
+                panel.grid.minor.x = element_line(size=.1,color="snow2"),
+                plot.margin = margin(1,6,1,6,"cm")) +
+          ylab("Carbon Fraction") +
           xlab("") +
+          
           # gganimate
           transition_time(year) +
           ease_aes('linear')
-      } else {
-        p <- ggplot(df, aes(rank, group = source_name,
-                            fill = as.factor(source_name),
-                            color = as.factor(source_name))) +
-          geom_tile(aes(y = source_fraction/2,
-                        height = source_fraction,
-                        width = 0.9), alpha = 0.8, color = NA) +
-          geom_text(aes(y=0, label = paste(source_name, " ")),
-                    vjust = 0.2, hjust = 1, size = 6) +
-          geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0),
-                    size = 6) +
-          ylim(0,1) +
-          coord_flip(clip = "off", expand = FALSE) +
-          theme(axis.text.y=element_blank(),
-                axis.ticks.y=element_blank(),
-                legend.position="none",
-                plot.margin = margin(4,4,4,6,"cm")) +
-          ylab("Carbon Fraction") +
-          xlab("") +
-        # gganimate
-        transition_time(year) +
-          ease_aes('linear')
       }
+      
+      # # Moving bar order
+      # if (input$view == 1) {
+      #   p <- ggplot(df, aes(-rank, group = source_name,
+      #                       fill = as.factor(source_name),
+      #                       color = as.factor(source_name))) +
+      #     geom_tile(aes(y = source_amt/2,
+      #                   height = source_amt,
+      #                   width = 0.9), alpha = 0.8, color = NA) +
+      #     geom_text(aes(y=0, label = paste(source_name, " ")),
+      #               vjust = 0.2, hjust = 1, size = 6) +
+      #     geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), size = 6) +
+      #     ylim(0,max(df$source_amt)+100) +
+      #     coord_flip(clip = "off", expand = FALSE) +
+      #     theme(axis.text.y=element_blank(),
+      #           axis.ticks.y=element_blank(),
+      #           legend.position="none",
+      #           plot.margin = margin(4,4,4,6,"cm")) +
+      #     ylab("Carbon (Pg)") +
+      #     xlab("") +
+      #     # gganimate
+      #     transition_time(year) +
+      #     ease_aes('linear')
+      # } else {
+      #   p <- ggplot(df, aes(-rank, group = source_name,
+      #                       fill = as.factor(source_name),
+      #                       color = as.factor(source_name))) +
+      #     geom_tile(aes(y = source_fraction/2,
+      #                   height = source_fraction,
+      #                   width = 0.9), alpha = 0.8, color = NA) +
+      #     geom_text(aes(y=0, label = paste(source_name, " ")),
+      #               vjust = 0.2, hjust = 1, size = 6) +
+      #     geom_text(aes(y = source_fraction, label = paste(" ",frac_lbl), hjust=0),
+      #               size = 6) +
+      #     ylim(0,1) +
+      #     coord_flip(clip = "off", expand = FALSE) +
+      #     theme(axis.text.y=element_blank(),
+      #           axis.ticks.y=element_blank(),
+      #           legend.position="none",
+      #           plot.margin = margin(4,4,4,6,"cm")) +
+      #     ylab("Carbon Fraction") +
+      #     xlab("") +
+      #   # gganimate
+      #   transition_time(year) +
+      #     ease_aes('linear')
+      # }
       
       # animation
       anim = p + transition_states(year,transition_length=4, state_length=2) +
@@ -375,7 +383,7 @@ shinyServer(function(input, output) {
         labs(title=paste0(selectedPool," Carbon Sources: {closest_state}"))
       
       # render
-      animate(anim, width = 1200, height = 600, renderer = gifski_renderer())
+      animate(anim, width = 900, height = 600, renderer = gifski_renderer())
       anim_save("outfile.gif") # save gif
       
       # return list with filename
