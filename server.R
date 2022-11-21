@@ -264,6 +264,9 @@ shinyServer(function(input, output) {
       ## filter df to just selected pool
       selectedPool <- input$pool
       df <- filter(df,pool_name==selectedPool)
+      if (input$ff == 2) {
+        df <- subset(df, source_name!="Fossil Fuels")
+      }
       
       # add rank column
       df <- df %>%
@@ -299,6 +302,7 @@ shinyServer(function(input, output) {
          coord_flip(clip = "off", expand = FALSE) +
          theme_void() +
          theme(plot.title = element_text(size=20,face="bold"),
+               plot.subtitle = element_text(size=18),
                legend.position="none",
                panel.grid.major.x = element_line(size=.1,color="snow2"),
                panel.grid.minor.x = element_line(size=.1,color="snow2"),
@@ -319,6 +323,7 @@ shinyServer(function(input, output) {
           coord_flip(clip = "off", expand = FALSE) +
           theme_void() +
           theme(plot.title = element_text(size=20,face="bold"),
+                plot.subtitle = element_text(size=18),
                 legend.position="none",
                 panel.grid.major.x = element_line(size=.1,color="snow2"),
                 panel.grid.minor.x = element_line(size=.1,color="snow2"),
@@ -378,19 +383,29 @@ shinyServer(function(input, output) {
       # }
       
       # animation
-      anim = p + transition_states(year,transition_length=4, state_length=2) +
+      anim = p + transition_states(year,transition_length=4, state_length=2,wrap=FALSE) +
         view_follow(fixed_x = TRUE) +
-        labs(title=paste0(selectedPool," Carbon Sources: {closest_state}"))
+        labs(title=paste0(selectedPool," Carbon Sources"),
+             subtitle="Year: {closest_state}")
       
       # render
-      animate(anim, width = 900, height = 600, renderer = gifski_renderer())
+      animate(anim, width = 900, height = 600, renderer = gifski_renderer(),end_pause=30)
       anim_save("outfile.gif") # save gif
       
-      # return list with filename
+      # file info
       list(src = "outfile.gif",
            contentType = 'image/gif'
            # width = 300
            # height = 300
            # alt = "alt text, edit later!!!"
-      )}, deleteFile = TRUE)
+      )}, deleteFile = FALSE)
+    
+    output$downloadgif <- downloadHandler(
+      filename = "outfile.gif",
+      contentType = "image/gif",
+      content = function(file) {
+        # copy file from image location to download location
+        file.copy("outfile.gif",file)
+      }
+    )
     })

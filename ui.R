@@ -43,7 +43,10 @@ shinyUI(fluidPage(
             radioButtons("view", label="View:",
                          choices = list("Carbon Amount"=1,
                                         "Carbon Fraction"=2),
-                         selected = 1)
+                         selected = 1),
+            radioButtons("ff", label="Toggle fossil fuels:",
+                         choices = list("On"=1,"Off"=2)),
+            downloadButton("downloadgif","Download gif"),
             #radioButtons("plot", label="View:",
             #             choices = list("Area Gif"=1,
             #                            "Barplot Gif"=2),
