@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(shinycssloaders)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -29,7 +30,7 @@ shinyUI(fluidPage(
                                         "SSP 5-8.5"="input/hector_ssp585.ini"),
                         selected = "input/hector_ssp245.ini"),
             sliderInput("start", label="Select year to begin tracking:",
-                        min = 1750, max = 2200, value = 1900, sep=""),
+                        min = 1750, max = 2050, value = 1900, sep=""),
             selectInput("pool", label="Select pool to view:",
                         choices = list("High latitude ocean"="HL Ocean",
                                        "Low latitude ocean"="LL Ocean",
@@ -46,21 +47,23 @@ shinyUI(fluidPage(
                          selected = 1),
             radioButtons("ff", label="Toggle fossil fuels:",
                          choices = list("On"=1,"Off"=2)),
-            downloadButton("downloadgif","Download gif"),
-            #radioButtons("plot", label="View:",
-            #             choices = list("Area Gif"=1,
-            #                            "Barplot Gif"=2),
-            #             selected = 1)#,
-            #actionButton("generate_plots","Generate plots (may take time to load)")
+            radioButtons("plotSelect", label="Select plot to view:",
+                         choices = list("Area Plot"=1,
+                                        "Bar Plot (Amount Only)"=2),
+                         selected=1),
+            actionButton("generate","Generate Animation"),
+            downloadButton("downloadGif","Download Animation"),
         ),
 
-        # Show a plot of the generated distribution
+        # Show animation
         mainPanel(
           #plotOutput("areaStill"),
-          #imageOutput("areaGif"),
+          withSpinner(imageOutput("animation"), type=7),
           #imageOutput("barGif"),
           #imageOutput("pieGif"),
-          imageOutput("movingBar")
+          #withSpinner(imageOutput("barGif"), type=7),
+          #withSpinner(imageOutput("pieGif"), type=7),
+          #withSpinner(imageOutput("movingBar"), type=7)
           )
         )
     )
