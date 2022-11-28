@@ -10,13 +10,13 @@
 library(shiny)
 library(shinycssloaders)
 
-# Define UI for application that draws a histogram
+# Define UI for carbon tracking app
 shinyUI(fluidPage(
 
     # Application title
-    titlePanel("Carbon tracking"),
+    titlePanel("Carbon tracking"), #ummm maybe better title lol
 
-    # Sidebar with a slider input for number of bins
+    # Sidebar with parameter options
     sidebarLayout(
         sidebarPanel(
             selectInput("ssp_file", label="Select SSP:",
@@ -57,13 +57,7 @@ shinyUI(fluidPage(
 
         # Show animation
         mainPanel(
-          #plotOutput("areaStill"),
           withSpinner(imageOutput("animation"), type=7),
-          #imageOutput("barGif"),
-          #imageOutput("pieGif"),
-          #withSpinner(imageOutput("barGif"), type=7),
-          #withSpinner(imageOutput("pieGif"), type=7),
-          #withSpinner(imageOutput("movingBar"), type=7)
           )
         )
     )
